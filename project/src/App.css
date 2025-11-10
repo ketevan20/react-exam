@@ -133,6 +133,10 @@ span {
     margin-bottom: 3rem;
 }
 
+.submit-container button {
+    max-width: 381px;
+}
+
 .form {
     width: 50%;
 }
