@@ -1,6 +1,13 @@
 import React from 'react'
 
-const CardFront = (props) => {
+type cardFrontProps = {
+  name: string,
+  cardNumber: string,
+  month: string,
+  year: string
+}
+
+const CardFront = ({name, cardNumber, month, year}: cardFrontProps) => {
   return (
     <div className='front-card-container'>
       <div className='circles'>
@@ -8,12 +15,12 @@ const CardFront = (props) => {
         <div className='small-circle'></div>
       </div>
       <div className='details'>
-        <h1>{props.cardNumber || "0000 0000 0000 0000"}</h1>
+        <h1>{cardNumber || "0000 0000 0000 0000"}</h1>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <p>{props.name || "Jane Appleseed"}</p>
+          <p>{name || "Jane Appleseed"}</p>
           <div>
-            <span>{props.month || "00"}/</span>
-            <span>{props.year || "00"}</span>
+            <span>{month || "00"}/</span>
+            <span>{year || "00"}</span>
           </div>
         </div>
       </div>

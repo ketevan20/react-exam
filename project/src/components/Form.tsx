@@ -1,44 +1,74 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
-const Form = (props) => {
-    const [errors, setErrors] = useState({});
+type formProps = {
+    name: string,
+    cardNumber: string,
+    month: string,
+    year: string,
+    cvc: string,
+    setName: (value: string) => void,
+    setCardNumber: (value: string) => void,
+    setMonth: (value: string) => void,
+    setYear: (value: string) => void,
+    setCvc: (value: string) => void,
+    handleSubmit: () => void
+}
+
+type ErrorsType = {
+  name?: string;
+  cardNumber?: string;
+  date?: string;
+  month?: string;
+  year?: string;
+  cvc?: string;
+};
+
+
+const Form = ({name, cardNumber, month, year, cvc, setName, setCardNumber, setMonth, setYear, setCvc, handleSubmit}: formProps) => {
+    const [errors, setErrors] = useState<ErrorsType>({});
     const cardNumberRegex = /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/;
     const cvcRegex = /^[0-9]{3}$/;
     const monthRegex = /^(0[1-9]|1[0-2])$/;
     const yearRegex = /^[0-9]{2}$/;
 
-    function Validate() {
-        const newErrors = {};
+    // const setNameRef = useRef<HTMLInputElement>(null);
+    // const setCardNumberRef = useRef('');
+    // const setMonthRef = useRef('');
+    // const setYearRef = useRef('');
+    // const setCvcRef = useRef('');
 
-        if (!props.name.trim()) {
+    function Validate() {
+        const newErrors: ErrorsType = {};
+
+        if (!name.trim()) {
             newErrors.name = "Can't be blank";
         }
 
-        if (!props.cardNumber.trim()) {
+        if (!cardNumber.trim()) {
             newErrors.cardNumber = "Can't be blank";
-        } else if (!cardNumberRegex.test(props.cardNumber)) {
+        } else if (!cardNumberRegex.test(cardNumber)) {
             newErrors.cardNumber = "Wrong format, numbers only";
         }
 
-        if (!props.month.trim()) {
+        if (!month.trim()) {
             newErrors.date = "Can't be blank";
             newErrors.month = "invalid";
-        } else if (!monthRegex.test(props.month)) {
+        } else if (!monthRegex.test(month)) {
             newErrors.date = "Wrong date format";
             newErrors.month = "invalid";
         }
 
-        if (!props.year.trim()) {
+        if (!year.trim()) {
             newErrors.date = "Can't be blank";
             newErrors.year = "invalid";
-        } else if (!yearRegex.test(props.year)) {
+        } else if (!yearRegex.test(year)) {
             newErrors.date = "Wrong date format";
             newErrors.year = "invalid";
         }
 
-        if (!props.cvc.trim()) {
+        if (!cvc.trim()) {
             newErrors.cvc = "Can't be blank";
-        } else if (!cvcRegex.test(props.cvc)) {
+        } else if (!cvcRegex.test(cvc)) {
             newErrors.cvc = "Wrong format";
         }
 
@@ -54,7 +84,7 @@ const Form = (props) => {
             <form className='form-container' onSubmit={(e) => {
                 e.preventDefault();
                 if (Validate()) {
-                    props.handleSubmit();
+                    handleSubmit();
                 }
             }}>
                 <div>
@@ -64,13 +94,13 @@ const Form = (props) => {
                         className={errors.name ? 'invalid-input' : ''}
                         type='text'
                         placeholder='e.g. Jane Appleseed'
-                        value={props.name || ""}
+                        value={name || ""}
                         onChange={(e) => {
                             const value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
-                            // Replace multiple spaces with a single one
                             const cleanValue = value.replace(/\s+/g, ' ');
-                            props.setName(cleanValue.trimStart()); // allow typing first space naturally
-                        }} /><br />
+                            setName(cleanValue.trimStart()); 
+                        }} 
+                        /><br />
                     {errors.name ? <small>{errors.name}</small> : ''}
                 </div>
                 <div>
@@ -79,12 +109,12 @@ const Form = (props) => {
                         maxLength={19}
                         className={errors.cardNumber ? 'invalid-input' : ''}
                         type='text'
-                        value={props.cardNumber || ""}
+                        value={cardNumber || ""}
                         placeholder='e.g. 1234 5678 9123 0000'
                         onChange={(e) => {
                             const raw = e.target.value.replace(/\D/g, '');
                             const formatted = raw.match(/.{1,4}/g)?.join(' ') ?? '';
-                            props.setCardNumber(formatted);
+                            setCardNumber(formatted);
                         }} /><br />
                     {errors.cardNumber ? <small>{errors.cardNumber}</small> : ''}
                 </div>
@@ -95,23 +125,22 @@ const Form = (props) => {
                             <input
                                 maxLength={2}
                                 className={errors.month ? 'invalid-input' : ''}
-                                type='number'
-                                value={props.month || ""}
+                                type='text'
+                                value={month || ""}
                                 placeholder='MM'
                                 onChange={(e) => {
-                                    const value = e.target.value.slice(0, 2);
-                                    props.setMonth(value.trim());
+                                    const value = e.target.value.replace(/\D/g, '');
+                                    setMonth(value.trim());
                                 }} />
                             <input
                                 maxLength={2}
-                                min={25}
-                                value={props.year || ""}
+                                value={year || ""}
                                 className={errors.year ? 'invalid-input' : ''}
-                                type='number'
+                                type='text'
                                 placeholder='YY'
                                 onChange={(e) => {
-                                    const value = e.target.value.slice(0, 2);
-                                    props.setYear(value.trim());
+                                    const value = e.target.value.replace(/\D/g, '');
+                                    setYear(value.trim());
                                 }} />
                         </div>
                         {errors.date ? <small>{errors.date}</small> : ''}
@@ -121,12 +150,12 @@ const Form = (props) => {
                         <input
                             maxLength={3}
                             className={errors.cvc ? 'invalid-input' : ''}
-                            type='number'
+                            type='text'
                             placeholder='e.g. 123'
-                            value={props.cvc || ""}
+                            value={cvc || ""}
                             onChange={(e) => {
-                                const value = e.target.value.slice(0, 3);
-                                props.setCvc(value.trim());
+                                const value = e.target.value.replace(/\D/g, '');
+                                setCvc(value.trim());
                             }} /><br />
                         {errors.cvc ? <small>{errors.cvc}</small> : ''}
                     </div>

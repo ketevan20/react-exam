@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Form from './Form'
-import CardFront from './CardFront';
-import CardBack from './CardBack';
-import SubmitContainer from './SubmitContainer';
+import Form from './Form.tsx'
+import CardFront from './CardFront.tsx';
+import CardBack from './CardBack.tsx';
+import SubmitContainer from './SubmitContainer.tsx';
 
 const MainContainer = () => {
     const [name, setName] = useState('');
@@ -26,6 +26,7 @@ const MainContainer = () => {
         setSubmited(true);
         localStorage.setItem('user', JSON.stringify({'name': name, 'cardNumber': cardNumber, 'month': month, 'year': year, 'cvc': cvc}));
     }
+    
 
     return (
         <div className='main-container'>
